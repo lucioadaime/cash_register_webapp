@@ -7,7 +7,6 @@ class MainController < ApplicationController
   private
 
   def set_cart
-    # Initialize the cart from the session or create a new cart object
     @cart = session[:cart] ? Cart.new(session[:cart]) : Cart.new
   end
 end

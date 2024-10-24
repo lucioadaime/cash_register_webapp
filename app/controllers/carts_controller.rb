@@ -3,27 +3,27 @@ class CartsController < ApplicationController
 
     def show
       @cart_items = @cart.items
-      puts "Cart items: #{@cart_items.inspect}" # Debugging line
       @total_price = @cart.total_price
     end
 
     def add_product
-      product_code = params[:product_code].to_s.upcase
-      @cart.add_product(product_code)
+        product_code = params[:product_code].to_s.upcase
+        puts "Searching for product with code: #{product_code}"
 
-      # Save the updated cart to session
-      save_cart
+        begin
+          product = Product.find_by_code(product_code)
+          @cart.add_product(product_code)  # Assuming add_product works with the product_code
+          session[:cart] = @cart.items    # Update the session with the latest cart data
+          flash[:notice] = "Product added successfully!"
+        rescue ArgumentError => e
+          flash[:alert] = e.message
+        end
 
-      respond_to do |format|
-        format.html { redirect_to menu_path, notice: 'Product added!' }
-        format.js   # For AJAX requests if applicable
+        respond_to do |format|
+          format.html { redirect_to menu_path }
+          format.js   # For AJAX requests if applicable
+        end
       end
-    rescue ArgumentError => e
-      respond_to do |format|
-        format.html { redirect_to menu_path, alert: e.message }
-        format.js { render js: "alert('#{e.message}');" }  # Handle the error in JS
-      end
-    end
 
     def remove_product
       product_code = params[:product_code].to_s.upcase
@@ -52,9 +52,8 @@ class CartsController < ApplicationController
     private
 
     def set_cart
-      # Initialize the cart using the session data or start with an empty cart
-      @cart = Cart.new(session[:cart] || {})
-    end
+        @cart = session[:cart] ? Cart.new(session[:cart]) : Cart.new
+      end
 
     # Save the cart to the session (only save the items, not the whole cart object)
     def save_cart

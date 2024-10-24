@@ -6,14 +6,6 @@ class Cart
     @discount_manager = discount_manager
   end
 
-
-  attr_reader :items
-
-  def initialize(cart_data = {}, discount_manager = DiscountManager.new)
-    @items = cart_data || {}
-    @discount_manager = discount_manager
-  end
-
   def add_product(product_code)
     product_code = product_code.to_s.upcase
     product = Product.find_by_code(product_code)
