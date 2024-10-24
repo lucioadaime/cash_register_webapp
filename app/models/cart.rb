@@ -1,41 +1,42 @@
-require "json"
-require_relative "discount_manager"
 class Cart
   attr_reader :items
 
-  def initialize(discount_manager = DiscountManager.new)
-    @items = {}
+  def initialize(cart_data = {}, discount_manager = DiscountManager.new)
+    @items = cart_data || {}
     @discount_manager = discount_manager
   end
-  def empty?
-    @items.empty? # This returns true if the cart has no items
+
+
+  attr_reader :items
+
+  def initialize(cart_data = {}, discount_manager = DiscountManager.new)
+    @items = cart_data || {}
+    @discount_manager = discount_manager
   end
 
   def add_product(product_code)
     product_code = product_code.to_s.upcase
     product = Product.find_by_code(product_code)
 
-    if product
-      if @items[product.code] # Use product.code as the key
-        @items[product.code][:quantity] += 1 # Increase the quantity
-      else
-        @items[product.code] = { product: product, quantity: 1 } # Add product with quantity
-      end
+    raise ArgumentError, "Product not found" unless product
+
+    if @items[product_code] # If product already in cart
+      @items[product_code][:quantity] += 1
+    else
+      @items[product_code] = { product: product, quantity: 1 }
     end
   end
 
   def remove_product(product_code)
     product_code = product_code.to_s.upcase
 
-    # Find the product by its code
-    product = Product.find_by_code(product_code)
-    if product && @items[product_code] # product code exists and product is in cart
-        if @items[product_code][:quantity] > 1
-          @items[product_code][:quantity] -= 1 # Decrease quantity
-        else
-          @items.delete(product_code) # Remove product from cart
-        end
-        true
+    if @items[product_code]
+      if @items[product_code][:quantity] > 1
+        @items[product_code][:quantity] -= 1
+      else
+        @items.delete(product_code)
+      end
+      true
     else
       false
     end
@@ -43,19 +44,16 @@ class Cart
 
 
   def total_price
-    total = 0.0
-    # Decide whether a discount applies
-    @items.each do |product_code, item|
-        total += @discount_manager.calculate_discounted_price(item[:product], item[:quantity])
+    @items.sum do |product_code, item|
+      product = Product.find_by_code(product_code) # Retrieve the product from DB
+      @discount_manager.calculate_discounted_price(product, item[:quantity])
     end
-    @items.sum { |product, info| info[:product].price * info[:quantity] }  # Calculate total price
-
-    total
+  end
+  def empty?
+    @items.empty?
   end
 
   def empty_cart
-    @items.each do |product, info|
-      @items.delete(product)
-    end
+    @items.clear
   end
 end

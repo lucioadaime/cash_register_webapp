@@ -9,15 +9,20 @@ class DiscountManager
   end
 
   def calculate_discounted_price(product, quantity)
+    return 0 if product.nil? # Early return if product is nil
+
     discount = @discounts[product.code]
     if discount
       apply_discount(product, quantity, discount)
     else
-      product.price * quantity
+      product.price * quantity # Return the regular price if no discount
     end
   end
 
   def apply_discount(product, quantity, discount)
+    # Ensure quantity is a valid number
+    quantity = quantity.to_i
+
     case discount["type"]
     when "BOGO"
       items_bogo = quantity / 2
@@ -32,7 +37,7 @@ class DiscountManager
 
     when "bulk drop by percentage"
       if quantity >= discount["min_quantity"]
-        (quantity * discount["%_price"] * product.price * 100).ceil / 100.0
+        (quantity * product.price * (1 - discount["%_price"])).round(2)
       else
         quantity * product.price
       end

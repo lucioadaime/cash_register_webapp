@@ -1,0 +1,27 @@
+<h2>Your Cart</h2>
+<% if @cart.nil? || @cart.empty? %>
+  <p>Your cart is empty.</p>
+<% else %>
+  <table>
+    <thead>
+      <tr>
+        <th>Product Code</th>
+        <th>Name</th>
+        <th>Quantity</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @cart.items.each do |product_code, item| %>
+        <% product = Product.find_by_code(product_code) %> <!-- Fetch the product -->
+        <tr>
+          <td><%= product_code %></td>
+          <td><%= product.name %></td>
+          <td><%= item[:quantity] %></td>
+          <td>$<%= product.price %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <p>Total: $<%= @cart.total_price %></p>
+<% end %>

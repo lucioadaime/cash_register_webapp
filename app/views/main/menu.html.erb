@@ -1,0 +1,54 @@
+<h1>Main Menu</h1>
+
+<!-- Add product form -->
+<ul>
+  <li>
+    <%= form_with url: add_product_cart_path, method: :post, local: false do |form| %>
+      <%= label_tag :product_code, "Enter Product Code to Add:" %>
+      <%= text_field_tag :product_code %>
+      <%= submit_tag "Add Product" %>
+    <% end %>
+  </li>
+
+  <!-- Remove product form can also use remote: true to make it work asynchronously -->
+  <li>
+    <%= form_with url: remove_product_cart_path, method: :delete, local: false do |form| %>
+      <%= label_tag :product_code, "Enter Product Code to Remove:" %>
+      <%= text_field_tag :product_code %>
+      <%= submit_tag "Remove Product" %>
+    <% end %>
+  </li>
+
+  <!-- Checkout -->
+  <li><%= button_to 'Checkout', checkout_cart_path, method: :post %></li>
+</ul>
+
+<hr>
+
+<!-- Cart section that will be updated dynamically -->
+<div id="cart-container">
+  <%= render partial: 'carts/cart', locals: { cart: @cart } %>
+</div>
+
+<!-- Available Products Section -->
+<h2>Available Products</h2>
+<table>
+  <tr>
+    <th>Code</th>
+    <th>Name</th>
+    <th>Price</th>
+  </tr>
+  <% if @products.any? %>
+    <% @products.each do |product| %>
+      <tr>
+        <td><%= product.code %></td>
+        <td><%= product.name %></td>
+        <td>$<%= product.price %></td>
+      </tr>
+    <% end %>
+  <% else %>
+    <tr>
+      <td colspan="3">No products available.</td>
+    </tr>
+  <% end %>
+</table>

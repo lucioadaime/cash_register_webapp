@@ -1,23 +1,13 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-  Rails.application.routes.draw do
-    resource :cart, only: [ :show ] do
-      post 'add_product/:product_id', to: 'carts#add_product', as: 'add_product'
-      delete 'remove_product/:product_id', to: 'carts#remove_product', as: 'remove_product'
-      post 'checkout', to: 'carts#checkout', as: 'checkout'
-    end
+  root 'main#menu'  # The main menu
 
-    root 'carts#show'
+  # Define routes for cart actions
+  resource :cart, only: [ :show ] do
+    post 'add_product', to: 'carts#add_product'  # POST for adding product to cart
+    delete 'remove_product', to: 'carts#remove_product'  # DELETE for removing product
+    post 'checkout', to: 'carts#checkout'  # POST for checkout
   end
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get "up" => "rails/health#show", as: :rails_health_check
-
-  # Render dynamic PWA files from app/views/pwa/*
-  get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-  get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-
-  # Defines the root path route ("/")
-  # root "posts#index"
+  # Route for displaying the form to add a product (GET request)
+  #  get 'cart/add_product', to: 'products#new', as: 'new_cart_product'
 end

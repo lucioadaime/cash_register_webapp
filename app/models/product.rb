@@ -1,25 +1,49 @@
 require "json"
 
-
 class Product < ApplicationRecord
   # Class variable to store preset products
   @preset_products = []
 
+  attr_reader :code, :name, :price
+
+  def initialize(attributes = {})
+  puts "Initializing product with attributes: #{attributes.inspect}" # Debugging line
+  @code = attributes[:code] # Change to symbol
+  @name = attributes[:name] # Change to symbol
+  @price = attributes[:price].to_f
+
+  # Raise an error if any attribute is nil
+  raise "Product attributes cannot be nil: #{attributes}" if @code.nil? || @name.nil? || @price.nil?
+end
+
+  # Class method to retrieve preset products
   def self.preset_products
-    @preset_products.empty? ? load_preset_products : @preset_products
+    load_preset_products if @preset_products.empty? # Load products if not already loaded
+    @preset_products
   end
 
   # Find a product by its code
   def self.find_by_code(code)
     code = code.to_s.upcase
-    @preset_products.find { |product| product.code == code }
+    puts "Searching for product with code: #{code}" # Debugging line
+    product = @preset_products.find { |product| product.code == code }
+    product
   end
+
   # Load preset products from a JSON file
   def self.load_preset_products
-    file_path = Rails.root.join("data", "products.json") # Construct the path to the JSON file
-    products_data = JSON.parse(File.read(file_path))
-    @preset_products = products_data.map do |data|
-      new(data["code"], data["name"], data["price"].to_f) # Create product instances
+    file_path = Rails.root.join("data", "products.json")
+
+    # Ensure the file exists before trying to read
+    if File.exist?(file_path)
+      products_data = JSON.parse(File.read(file_path))
+      @preset_products = products_data.map do |data|
+        puts "Loading product: #{data.inspect}" # Debugging line
+        Product.new(code: data["code"], name: data["name"], price: data["price"].to_f)
+      end
+      puts "Loaded products: #{@preset_products.inspect}" # Debugging line
+    else
+      puts "Products file not found at #{file_path}" # Debugging line
     end
   end
 

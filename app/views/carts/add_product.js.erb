@@ -1,0 +1,2 @@
+# Find the cart section and replace it with the updated cart
+document.getElementById('cart-container').innerHTML = "<%= j(render partial: 'carts/cart', locals: { cart: @cart }) %>";
