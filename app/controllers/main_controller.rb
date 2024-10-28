@@ -7,8 +7,8 @@ class MainController < ApplicationController
     else
       reset_cart
       @cart = Cart.new
-      @cart.add_product("GR1", 1)  # Example items
-      @cart.add_product("SR1", 1)
+      # @cart.add_product("GR1", 1)  # Example items
+      # @cart.add_product("SR1", 1)
     end
 
     # Only store product codes and quantities in the session

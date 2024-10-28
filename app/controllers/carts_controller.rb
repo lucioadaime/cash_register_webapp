@@ -11,10 +11,11 @@ class CartsController < ApplicationController
         puts "Searching for product with code: #{product_code} - Timestamp: #{Time.now.to_f}"
 
         begin
-          @cart.add_product(product_code, 1)  # Assuming add_product works with the product_code
-          puts "Items in cart after addition: #{@cart.items.inspect}"
-          save_cart   # Update the session with the latest cart data
-          flash[:notice] = "Product added successfully!"
+
+        @cart.add_product(product_code, 1)
+        puts "Items in cart after addition: #{@cart.items.inspect}"
+        save_cart   # Update the session with the latest cart data
+        flash[:notice] = "Product added successfully!"
         rescue ArgumentError => e
           flash[:alert] = e.message
         end
