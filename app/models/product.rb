@@ -26,12 +26,14 @@ class Product < ApplicationRecord
   # Find a product by its code
   def self.find_by_code(code)
     code = code.to_s.upcase
-    puts "Searching for product with code: #{code}" # Debugging line
     product = preset_products.find { |product| product.code == code }
 
     unless product
       raise ArgumentError, "Product with code '#{code}' not found"
+      puts "Product with code '#{code}' not found in find_by_code."
+      nil
     end
+    puts "Found: #{product.inspect}" # Debugging line
     product
   end
 

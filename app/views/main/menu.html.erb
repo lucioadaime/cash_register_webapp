@@ -3,19 +3,19 @@
 <!-- Add product form -->
 <ul>
   <li>
-    <%= form_with url: add_product_cart_path, method: :post, local: false do |form| %>
+    <%= form_with url: add_product_cart_path, method: :post, remote: true, id: "add-product-form" do |form| %>
       <%= label_tag :product_code, "Enter Product Code to Add:" %>
       <%= text_field_tag :product_code %>
-      <%= submit_tag "Add Product" %>
+      <%= submit_tag "Add Product", id: "add-product-button", data: { disable_with: "Adding..." } %>
     <% end %>
   </li>
 
-  <!-- Remove product form can also use remote: true to make it work asynchronously -->
+  <!-- Remove product form with asynchronous request -->
   <li>
-    <%= form_with url: remove_product_cart_path, method: :delete, local: false do |form| %>
+    <%= form_with url: remove_product_cart_path, method: :delete, remote: true, id: "remove-product-form" do |form| %>
       <%= label_tag :product_code, "Enter Product Code to Remove:" %>
       <%= text_field_tag :product_code %>
-      <%= submit_tag "Remove Product" %>
+      <%= submit_tag "Remove Product", data: { disable_with: "Removing..." } %>
     <% end %>
   </li>
 
@@ -26,9 +26,10 @@
 <hr>
 
 <!-- Cart section that will be updated dynamically -->
+
 <div id="cart-container">
   <%= render partial: 'carts/cart', locals: { cart: @cart } %>
-</div>
+#</div>
 
 <!-- Available Products Section -->
 <h2>Available Products</h2>
@@ -52,3 +53,39 @@
     </tr>
   <% end %>
 </table>
+
+<!-- Inline JavaScript for AJAX handling -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Event listener for Add Product form
+    document.getElementById("add-product-form").addEventListener("ajax:beforeSend", function() {
+      document.getElementById("add-product-button").disabled = true;
+    });
+
+    document.getElementById("add-product-form").addEventListener("ajax:success", function(event) {
+      // Get the server response
+      const [data, status, xhr] = event.detail;
+      
+      // Update the cart container
+      document.getElementById("cart-container").innerHTML = xhr.responseText;
+    });
+
+    document.getElementById("add-product-form").addEventListener("ajax:complete", function() {
+      document.getElementById("add-product-button").disabled = false;
+    });
+
+    // Event listener for Remove Product form
+    document.getElementById("remove-product-form").addEventListener("ajax:beforeSend", function() {
+      document.getElementById("remove-product-form").querySelector("input[type='submit']").disabled = true;
+    });
+
+    document.getElementById("remove-product-form").addEventListener("ajax:success", function(event) {
+      const [data, status, xhr] = event.detail;
+      document.getElementById("cart-container").innerHTML = xhr.responseText;
+    });
+
+    document.getElementById("remove-product-form").addEventListener("ajax:complete", function() {
+      document.getElementById("remove-product-form").querySelector("input[type='submit']").disabled = false;
+    });
+  });
+</script>

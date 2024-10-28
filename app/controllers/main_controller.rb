@@ -1,12 +1,31 @@
 class MainController < ApplicationController
-  before_action :set_cart
-
   def menu
     @products = Product.preset_products
+
+    if session[:cart]
+      @cart = Cart.from_hash(session[:cart])
+    else
+      reset_cart
+      @cart = Cart.new
+      @cart.add_product("GR1", 1)  # Example items
+      @cart.add_product("SR1", 1)
+    end
+
+    # Only store product codes and quantities in the session
+    session[:cart] = @cart.to_hash
+
+    # Render your views as usual
   end
-  private
+
+private
 
   def set_cart
-    @cart = session[:cart] ? Cart.new(session[:cart]) : Cart.new
+    session[:cart] ||= {}  # Initialize session[:cart] as an empty hash if it’s nil
+    @cart = Cart.new(session[:cart])
+  end
+
+  def reset_cart
+    session[:cart] = nil
+    puts "CART CLEARED"
   end
 end

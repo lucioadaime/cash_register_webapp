@@ -1,19 +1,18 @@
 class Cart
-  attr_reader :items
+attr_accessor :items, :discount_manager
 
   def initialize(cart_data = {}, discount_manager = DiscountManager.new)
     @items = cart_data || {}
     @discount_manager = discount_manager
   end
 
-  def add_product(product_code)
+  def add_product(product_code, quantity)
     product_code = product_code.to_s.upcase
     product = Product.find_by_code(product_code)
-
     raise ArgumentError, "Product not found" unless product
 
     if @items[product_code] # If product already in cart
-      @items[product_code][:quantity] += 1
+      @items[product_code] = { product: product, quantity: quantity }
     else
       @items[product_code] = { product: product, quantity: 1 }
     end
@@ -47,5 +46,16 @@ class Cart
 
   def empty_cart
     @items.clear
+  end
+  def to_hash
+    @items.transform_values { |item| { quantity: item[:quantity] } }
+  end
+  # Restore Cart from a simple hash
+  def self.from_hash(hash)
+  cart = new
+  hash.each do |code, data|
+    cart.add_product(code, data['quantity'])
+  end
+  cart
   end
 end

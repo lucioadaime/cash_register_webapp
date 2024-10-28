@@ -1,2 +1,4 @@
-# Find the cart section and replace it with the updated cart
+console.log("<%= j(@cart.inspect) %>");
+document.getElementById("add-product-button").disabled = true;
 document.getElementById('cart-container').innerHTML = "<%= j(render partial: 'carts/cart', locals: { cart: @cart }) %>";
+document.getElementById("add-product-button").disabled = false;

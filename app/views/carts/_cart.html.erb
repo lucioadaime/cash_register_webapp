@@ -1,7 +1,7 @@
 <h2>Your Cart</h2>
-<% if @cart.nil? || @cart.empty? %>
-  <p>Your cart is empty.</p>
-<% else %>
+<% if @cart.present? && @cart.items.present? %>
+  <%= debug @cart.items %> <!-- Shows the contents of @cart.items in the view -->
+  
   <table>
     <thead>
       <tr>
@@ -13,7 +13,7 @@
     </thead>
     <tbody>
       <% @cart.items.each do |product_code, item| %>
-        <% product = Product.find_by_code(product_code) %> <!-- Fetch the product -->
+        <% product = item[:product] %>
         <tr>
           <td><%= product_code %></td>
           <td><%= product.name %></td>
@@ -24,4 +24,6 @@
     </tbody>
   </table>
   <p>Total: $<%= @cart.total_price %></p>
+<% else %>
+  <p>Your cart is empty.</p>
 <% end %>
