@@ -50,11 +50,53 @@ body {
     cursor: pointer;
   }
   
-  button:hover, input[type="submit"]:hover {
+button:hover, input[type="submit"]:hover {
     background-color: #2980b9;
   }
+.btn {
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: #3498db; /* Button background color */
+    color: white; /* Text color */
+    text-decoration: none; /* Remove underline */
+    margin-top: 20px; /* Space above the button */
+}
+.alert {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+.btn:hover {
+    background-color: #2980b9; /* Darker shade on hover */
+}
+.cart-wrapper {
+display: flex !important;     /* Force flex display */
+align-items: flex-start;      /* Align items at the top */
+justify-content: space-between; /* Keeps space between form and cart */
+gap: 0px;                    /* Adds space between form and cart */
+}
+
+.product-forms {
+flex-grow: 1;                 /* Form section expands to available space */
+}
+
+#cart-container {
+background-color: #fff;
+border: 1px solid #ddd;
+padding: 15px;
+border-radius: 5px;
+box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+width: 100px;                 /* Fixed width for cart */
+min-width: 100px;
+}
   
-  #cart-container {
-    margin-top: 20px;
-  }
   

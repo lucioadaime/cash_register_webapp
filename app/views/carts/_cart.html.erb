@@ -1,29 +1,26 @@
-<h2>Your Cart</h2>
-<% if @cart.present? && @cart.items.present? %>
-  <%= debug @cart.items %> <!-- Shows the contents of @cart.items in the view -->
-  
-  <table>
-    <thead>
-      <tr>
-        <th>Product Code</th>
-        <th>Name</th>
-        <th>Quantity</th>
-        <th>Price</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @cart.items.each do |product_code, item| %>
-        <% product = item[:product] %>
+<div class="cart-container">
+  <h2>Your Cart</h2>
+  <% if @cart.present? && @cart.items.present? %>
+    
+    <table>
+      <thead>
         <tr>
-          <td><%= product_code %></td>
-          <td><%= product.name %></td>
-          <td><%= item[:quantity] %></td>
-          <td>$<%= product.price %></td>
+          <th>Name</th>
+          <th>Quantity</th>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <p>Total: $<%= @cart.total_price %></p>
-<% else %>
-  <p>Your cart is empty.</p>
-<% end %>
+      </thead>
+      <tbody>
+        <% @cart.items.each do |product_code, item| %>
+          <% product = item[:product] %>
+          <tr>
+            <td><%= product.name %></td>
+            <td><%= item[:quantity] %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <p>Total: $<%= @cart.total_price %></p>
+  <% else %>
+    <p>Your cart is empty.</p>
+  <% end %>
+</div>
