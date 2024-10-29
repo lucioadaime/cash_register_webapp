@@ -1,0 +1,28 @@
+<!-- app/views/main/checkout.html.erb -->
+<h1>Thank you for shopping!</h1>
+
+<% if @cart.present? && @cart.items.present? %>
+  <h2>Your Cart</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Quantity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @cart.items.each do |product_code, item| %>
+        <% product = item[:product] %>
+        <tr>
+          <td><%= product.name %></td>
+          <td><%= item[:quantity] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <p>Total: $<%= @cart.total_price %></p>
+<% end %>
+
+<!-- Link to go back to the main menu -->
+<%= link_to 'Continue Shopping!', menu_path, class: 'button' %>
+

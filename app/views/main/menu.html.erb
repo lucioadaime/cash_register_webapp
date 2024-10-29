@@ -1,35 +1,35 @@
-<h1>Main Menu</h1>
+<h1>Welcome to the Cart Register!</h1>
 
-<!-- Add product form -->
-<ul>
-  <li>
-    <%= form_with url: add_product_cart_path, method: :post, remote: true, id: "add-product-form" do |form| %>
-      <%= label_tag :product_code, "Enter Product Code to Add:" %>
-      <%= text_field_tag :product_code %>
-      <%= submit_tag "Add Product", id: "add-product-button", data: { disable_with: "Adding..." } %>
-    <% end %>
-  </li>
+<div class="cart-wrapper">
+  <!-- Product form section -->
+  <div class="product-forms">
+    <ul>
+      <li>
+        <%= form_with url: add_product_cart_path, method: :post, remote: true, id: "add-product-form" do |form| %>
+          <%= label_tag :product_code, "Enter Product Code to Add:" %>
+          <%= text_field_tag :product_code %>
+          <%= submit_tag "Add Item", id: "add-product-button", data: { disable_with: "Adding..." } %>
+        <% end %>
+      </li>
+      <li>
+        <%= form_with url: remove_product_cart_path, method: :delete, remote: true, id: "remove-product-form" do |form| %>
+          <%= label_tag :product_code, "Enter Product Code to Remove:" %>
+          <%= text_field_tag :product_code %>
+          <%= submit_tag "Remove Item", data: { disable_with: "Removing..." } %>
+        <% end %>
+      </li>
+      <li>
+        <%= button_to 'Checkout', checkout_cart_path, method: :post %>
+      </li>
+    </ul>
+  </div>
 
-  <!-- Remove product form with asynchronous request -->
-  <li>
-    <%= form_with url: remove_product_cart_path, method: :delete, remote: true, id: "remove-product-form" do |form| %>
-      <%= label_tag :product_code, "Enter Product Code to Remove:" %>
-      <%= text_field_tag :product_code %>
-      <%= submit_tag "Remove Product", data: { disable_with: "Removing..." } %>
-    <% end %>
-  </li>
+  <!-- Cart container beside the form -->
+  <div id="cart-container">
+    <%= render partial: 'carts/cart', locals: { cart: @cart } %>
+  </div>
+</div>
 
-  <!-- Checkout -->
-  <li><%= button_to 'Checkout', checkout_cart_path, method: :post %></li>
-</ul>
-
-<hr>
-
-<!-- Cart section that will be updated dynamically -->
-
-<div id="cart-container">
-  <%= render partial: 'carts/cart', locals: { cart: @cart } %>
-#</div>
 
 <!-- Available Products Section -->
 <h2>Available Products</h2>

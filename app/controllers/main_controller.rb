@@ -18,6 +18,16 @@ class MainController < ApplicationController
     # Render your views as usual
   end
 
+
+  def checkout
+    @cart = Cart.from_hash(session[:cart])
+    if @cart.empty?
+      flash[:alert] = "Your cart is empty. Please add items to your cart before checking out."
+      redirect_to menu_path
+    else
+      reset_cart
+    end
+  end
 private
 
 def init_cart
