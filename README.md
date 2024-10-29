@@ -1,6 +1,3 @@
-Certainly! Here’s the `README.md` content properly formatted as Markdown.
-
----
 
 # Cash Register Web App
 
