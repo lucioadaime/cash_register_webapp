@@ -8,6 +8,7 @@ class CartsController < ApplicationController
 
     def add_product
         product_code = params[:product_code].to_s.upcase
+        begin
         @cart = Cart.from_hash(session[:cart])  # Load cart from session hash
         @cart.add_product(product_code, params[:quantity].to_i)
         session[:cart] = @cart.to_hash  # Save updated cart back to session
@@ -21,7 +22,8 @@ class CartsController < ApplicationController
           format.html { redirect_to menu_path }
           format.js   # For AJAX requests if applicable
         end
-      end
+    end
+
 
     def remove_product
       product_code = params[:product_code].to_s.upcase
@@ -53,7 +55,7 @@ class CartsController < ApplicationController
         session[:cart] ||= {}  # Initialize session[:cart] as an empty hash if it’s nil
         @cart = Cart.new(session[:cart])
         puts "Cart in set_cart: #{@cart.inspect}"
-      end
+    end
 
 
     # Save the cart to the session (only save the items, not the whole cart object)
