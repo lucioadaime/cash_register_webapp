@@ -27,10 +27,12 @@ class CartsController < ApplicationController
 
     def remove_product
       product_code = params[:product_code].to_s.upcase
+      @cart = Cart.from_hash(session[:cart])  # Load cart from session hash
+
       if @cart.remove_product(product_code)
-        flash[:notice] = "Product removed from cart."
+        flash[:notice] = "Item removed from cart."
       else
-        flash[:alert] = "Product not found in cart."
+        flash[:alert] = "Item not found in cart."
       end
 
       # Save the updated cart to session
@@ -54,13 +56,13 @@ class CartsController < ApplicationController
     def set_cart
         session[:cart] ||= {}  # Initialize session[:cart] as an empty hash if it’s nil
         @cart = Cart.new(session[:cart])
-        puts "Cart in set_cart: #{@cart.inspect}"
+        puts "Cart in set_cart: #{@cart.items.inspect}"
     end
 
 
     # Save the cart to the session (only save the items, not the whole cart object)
     def save_cart
         session[:cart] = @cart
-        puts "Cart in save_cart: #{@cart.inspect}"
+        puts "Cart in save_cart: #{@cart.items.inspect}"
     end
 end

@@ -27,11 +27,16 @@ class Cart
 
   def remove_product(product_code)
     product_code = product_code.to_s.upcase
-    if @items[product_code]
+
+    if @items.key?(product_code)
+      current_quantity = @items[product_code][:quantity].to_i
       # Decrease quantity if more than 1, otherwise remove from cart
-      if @items[product_code][:quantity] > 1
-        @items[product_code][:quantity] -= 1
+      if current_quantity > 1
+        puts 'current_quantity > 1'
+        new_quantity = current_quantity - 1
+        @items[product_code][:quantity] = new_quantity
       else
+        puts 'current_quantity = 1'
         @items.delete(product_code)
       end
       true
