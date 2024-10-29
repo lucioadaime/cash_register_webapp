@@ -1,4 +1,5 @@
 class MainController < ApplicationController
+  before_action :reset_cart
   def menu
     @products = Product.preset_products
 
