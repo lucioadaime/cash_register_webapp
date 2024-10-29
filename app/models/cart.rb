@@ -7,20 +7,23 @@ class Cart
   end
 
   def add_product(product_code, quantity = 1)
-    product_code = product_code.to_s.upcase
+    product_code = product_code.to_s.strip.upcase  # Normalize product_code
     product = Product.find_by_code(product_code)
+    raise ArgumentError, "Product not found" unless product
 
-    if @items[product_code]
-      puts "BEFORE Item #{product_code} with quantity #{@items[product_code][:quantity].to_i}"
-      new_quantity = @items[product_code][:quantity].to_i + 1
-      @items[product_code] = { product: product, quantity: new_quantity }
-      puts "AFTER Item #{product_code} with quantity #{@items[product_code][:quantity].to_i}"
+    quantity = quantity.to_i
+    quantity = 1 if quantity <= 0
+    if @items.key?(product_code) # if already in cart
+      current_quantity = @items[product_code][:quantity].to_i
+      new_quantity = current_quantity + quantity
+      @items[product_code][:quantity] = new_quantity
     else
-      # Add product to cart if not already present
-      raise ArgumentError, "Product not found" unless product
+      # Add new product with  quantity 1
       @items[product_code] = { product: product, quantity: quantity }
     end
   end
+
+
 
   def remove_product(product_code)
     product_code = product_code.to_s.upcase

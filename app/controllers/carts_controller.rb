@@ -8,13 +8,10 @@ class CartsController < ApplicationController
 
     def add_product
         product_code = params[:product_code].to_s.upcase
-        puts "Searching for product with code: #{product_code} - Timestamp: #{Time.now.to_f}"
+        @cart = Cart.from_hash(session[:cart])  # Load cart from session hash
+        @cart.add_product(product_code, params[:quantity].to_i)
+        session[:cart] = @cart.to_hash  # Save updated cart back to session
 
-        begin
-
-        @cart.add_product(product_code, 1)
-        puts "Items in cart after addition: #{@cart.items.inspect}"
-        save_cart   # Update the session with the latest cart data
         flash[:notice] = "Product added successfully!"
         rescue ArgumentError => e
           flash[:alert] = e.message
