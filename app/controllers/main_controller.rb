@@ -1,5 +1,5 @@
 class MainController < ApplicationController
-  before_action :reset_cart
+  before_action :init_cart
   def menu
     @products = Product.preset_products
 
@@ -20,10 +20,12 @@ class MainController < ApplicationController
 
 private
 
-  def set_cart
-    session[:cart] ||= {}  # Initialize session[:cart] as an empty hash if it’s nil
-    @cart = Cart.new(session[:cart])
+def init_cart
+  # Clear the cart only on the first load
+  if session[:cart].nil?
+    reset_cart
   end
+end
 
   def reset_cart
     session[:cart] = nil
